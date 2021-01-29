@@ -15,7 +15,7 @@ return [
     |
     */
     'pagination' => [
-        'limit' => 15
+        'limit' => 15,
     ],
 
     /*
@@ -32,9 +32,9 @@ return [
     */
     'fractal' => [
         'params' => [
-            'include' => 'include'
+            'include' => 'include',
         ],
-        'serializer' => League\Fractal\Serializer\DataArraySerializer::class
+        'serializer' => App\Support\Serializers\ArraySerializer::class,
     ],
 
     /*
@@ -106,7 +106,7 @@ return [
                 'create' => true,
                 'update' => true,
                 'delete' => true,
-            ]
+            ],
         ],
 
         'params' => [
@@ -119,7 +119,7 @@ return [
             | Ex: http://prettus.local/?search=lorem&skipCache=true
             |
             */
-            'skipCache' => 'skipCache'
+            'skipCache' => 'skipCache',
         ],
 
         /*
@@ -139,8 +139,8 @@ return [
        */
         'allowed' => [
             'only' => null,
-            'except' => null
-        ]
+            'except' => null,
+        ],
     ],
 
     /*
@@ -218,8 +218,9 @@ return [
             'sortedBy' => 'sortedBy',
             'with' => 'with',
             'searchJoin' => 'searchJoin',
-            'withCount' => 'withCount'
-        ]
+            'withCount' => 'withCount',
+            'cursor' => 'cursor',
+        ],
     ],
     /*
     |--------------------------------------------------------------------------
@@ -232,15 +233,15 @@ return [
         'rootNamespace' => 'App\\',
         'stubsOverridePath' => app()->path(),
         'paths' => [
-            'models' => 'Entities',
-            'repositories' => 'Repositories',
-            'interfaces' => 'Repositories',
-            'transformers' => 'Transformers',
-            'presenters' => 'Presenters',
-            'validators' => 'Validators',
+            'models' => 'Repositories\\Models',
+            'repositories' => 'Repositories\\Eloquent',
+            'interfaces' => 'Contracts\\Repositories',
+            'transformers' => 'Repositories\\Transformers',
+            'presenters' => 'Repositories\\Presenters',
+            'validators' => 'Repositories\\Validators',
             'controllers' => 'Http/Controllers',
             'provider' => 'RepositoryServiceProvider',
-            'criteria' => 'Criteria'
-        ]
-    ]
+            'criteria' => 'Repositories\\Criteria',
+        ],
+    ],
 ];
