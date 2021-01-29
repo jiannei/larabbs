@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Http\Requests\UserRequest;
 use App\Handlers\ImageUploadHandler;
+use App\Http\Requests\UserRequest;
+use App\Repositories\Models\User;
 
 class UsersController extends Controller
 {

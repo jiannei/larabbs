@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Link;
+use App\Repositories\Models\Link;
 use Cache;
 
 class LinkObserver

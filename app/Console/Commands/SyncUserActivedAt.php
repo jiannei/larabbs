@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Repositories\Models\User;
 use Illuminate\Console\Command;
-use App\Models\User;
 
 class SyncUserActivedAt extends Command
 {

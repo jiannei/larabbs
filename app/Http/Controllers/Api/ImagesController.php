@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Image;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Handlers\ImageUploadHandler;
-use App\Http\Resources\ImageResource;
 use App\Http\Requests\Api\ImageRequest;
+use App\Http\Resources\ImageResource;
+use App\Repositories\Models\Image;
+use Illuminate\Support\Str;
 
 class ImagesController extends Controller
 {

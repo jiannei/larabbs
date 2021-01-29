@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Policies\ReplyPolicy;
+use App\Policies\TopicPolicy;
+use App\Repositories\Models\Reply;
+use App\Repositories\Models\Topic;
+use Auth;
+use Horizon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,8 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-		 \App\Models\Reply::class => \App\Policies\ReplyPolicy::class,
-		 \App\Models\Topic::class => \App\Policies\TopicPolicy::class,
+        Reply::class => ReplyPolicy::class,
+        Topic::class => TopicPolicy::class,
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
@@ -33,9 +39,9 @@ class AuthServiceProvider extends ServiceProvider
         });
 
 
-        \Horizon::auth(function ($request) {
+        Horizon::auth(function ($request) {
             // 是否是站长
-            return \Auth::user()->hasRole('Founder');
+            return Auth::user()->hasRole('Founder');
         });
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Link;
-use Illuminate\Http\Request;
 use App\Http\Resources\LinkResource;
+use App\Repositories\Models\Link;
 
 class LinksController extends Controller
 {

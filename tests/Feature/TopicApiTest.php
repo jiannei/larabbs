@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
-use App\Models\Topic;
-use Tests\Traits\ActingJWTUser;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Repositories\Models\Topic;
+use App\Repositories\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use Tests\Traits\ActingJWTUser;
 
 class TopicApiTest extends TestCase
 {
@@ -28,7 +27,7 @@ class TopicApiTest extends TestCase
         $data = ['category_id' => 1, 'body' => 'test body', 'title' => 'test title'];
 
         $response = $this->JWTActingAs($this->user)
-                         ->json('POST', '/api/v1/topics', $data);
+            ->json('POST', '/api/v1/topics', $data);
 
         $assertData = [
             'category_id' => 1,
@@ -38,7 +37,7 @@ class TopicApiTest extends TestCase
         ];
 
         $response->assertStatus(201)
-                 ->assertJsonFragment($assertData);
+            ->assertJsonFragment($assertData);
     }
 
     public function testUpdateTopic()
@@ -48,7 +47,7 @@ class TopicApiTest extends TestCase
         $editData = ['category_id' => 2, 'body' => 'edit body', 'title' => 'edit title'];
 
         $response = $this->JWTActingAs($this->user)
-                         ->json('PATCH', '/api/v1/topics/'.$topic->id, $editData);
+            ->json('PATCH', '/api/v1/topics/'.$topic->id, $editData);
 
         $assertData= [
             'category_id' => 2,
@@ -58,7 +57,7 @@ class TopicApiTest extends TestCase
         ];
 
         $response->assertStatus(200)
-                 ->assertJsonFragment($assertData);
+            ->assertJsonFragment($assertData);
     }
 
     protected function makeTopic()
@@ -82,7 +81,7 @@ class TopicApiTest extends TestCase
         ];
 
         $response->assertStatus(200)
-                 ->assertJsonFragment($assertData);
+            ->assertJsonFragment($assertData);
     }
 
     public function testIndexTopic()
@@ -90,14 +89,14 @@ class TopicApiTest extends TestCase
         $response = $this->json('GET', '/api/v1/topics');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure(['data', 'meta']);
+            ->assertJsonStructure(['data', 'meta']);
     }
 
     public function testDeleteTopic()
     {
         $topic = $this->makeTopic();
         $response = $this->JWTActingAs($this->user)
-                         ->json('DELETE', '/api/v1/topics/'.$topic->id);
+            ->json('DELETE', '/api/v1/topics/'.$topic->id);
         $response->assertStatus(204);
 
         $response = $this->json('GET', '/api/v1/topics/'.$topic->id);

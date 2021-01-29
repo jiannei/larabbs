@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Repositories\Models;
 
+use Auth;
+use Database\Factories\UserFactory;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
-use Auth;
 use Spatie\Permission\Traits\HasRoles;
+use Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
@@ -21,6 +23,17 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     use Notifiable {
         notify as protected laravelNotify;
     }
+
+    /**
+     * 兼容 Laravel 8 的 Factory.
+     *
+     * @return UserFactory
+     */
+    protected static function newFactory()
+    {
+        return UserFactory::new();
+    }
+
     public function notify($instance)
     {
         // 如果要通知的人是当前用户，就不必通知了！
@@ -96,10 +109,10 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     public function setAvatarAttribute($path)
     {
         // 如果不是 `http` 子串开头，那就是从后台上传的，需要补全 URL
-        if ( ! \Str::startsWith($path, 'http')) {
+        if (!Str::startsWith($path, 'http')) {
 
             // 拼接完整的 URL
-            $path = config('app.url') . "/uploads/images/avatars/$path";
+            $path = config('app.url')."/uploads/images/avatars/$path";
         }
 
         $this->attributes['avatar'] = $path;
@@ -107,11 +120,11 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
 
     public function getJWTIdentifier()
     {
-		return $this->getKey();
-	}
+        return $this->getKey();
+    }
 
-	public function getJWTCustomClaims()
-	{
-		return [];
-	}
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

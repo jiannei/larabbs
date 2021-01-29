@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Repositories\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Reply extends Model
+class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content'];
-
-    public function topic()
-    {
-        return $this->belongsTo(Topic::class);
-    }
+    protected $fillable = ['type', 'path'];
 
     public function user()
     {

@@ -2,8 +2,17 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Observers\LinkObserver;
+use App\Observers\ReplyObserver;
+use App\Observers\TopicObserver;
+use App\Observers\UserObserver;
+use App\Repositories\Models\Link;
+use App\Repositories\Models\Reply;
+use App\Repositories\Models\Topic;
+use App\Repositories\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,13 +34,13 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-	{
-		\App\Models\User::observe(\App\Observers\UserObserver::class);
-		\App\Models\Reply::observe(\App\Observers\ReplyObserver::class);
-        \App\Models\Topic::observe(\App\Observers\TopicObserver::class);
-        \App\Models\Link::observe(\App\Observers\LinkObserver::class);
+    {
+        User::observe(UserObserver::class);
+        Reply::observe(ReplyObserver::class);
+        Topic::observe(TopicObserver::class);
+        Link::observe(LinkObserver::class);
 
-        \Illuminate\Pagination\Paginator::useBootstrap();
+        Paginator::useBootstrap();
 
         JsonResource::withoutWrapping();
     }

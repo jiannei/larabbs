@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Repositories\Models;
 
+use Database\Factories\TopicFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Topic extends Model
@@ -11,6 +12,16 @@ class Topic extends Model
     protected $fillable = [
         'title', 'body', 'category_id', 'excerpt', 'slug'
     ];
+
+    /**
+     * 兼容 Laravel 8 的 Factory.
+     *
+     * @return TopicFactory
+     */
+    protected static function newFactory()
+    {
+        return TopicFactory::new();
+    }
 
     public function category()
     {

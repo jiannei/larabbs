@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\User;
-use Illuminate\Support\Arr;
-use Illuminate\Http\Request;
-use Illuminate\Auth\AuthenticationException;
 use App\Http\Requests\Api\AuthorizationRequest;
 use App\Http\Requests\Api\SocialAuthorizationRequest;
+use App\Repositories\Models\User;
+use Auth;
+use Exception;
+use Illuminate\Auth\AuthenticationException;
+use Socialite;
 
 class AuthorizationsController extends Controller
 {
@@ -21,7 +22,7 @@ class AuthorizationsController extends Controller
 
         $credentials['password'] = $request->password;
 
-        if (!$token = \Auth::guard('api')->attempt($credentials)) {
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             throw new AuthenticationException(trans('auth.failed'));
         }
 
@@ -30,7 +31,7 @@ class AuthorizationsController extends Controller
 
     public function socialStore($type, SocialAuthorizationRequest $request)
     {
-        $driver = \Socialite::create($type);
+        $driver = Socialite::create($type);
 
         try {
             if ($code = $request->code) {
@@ -45,8 +46,8 @@ class AuthorizationsController extends Controller
 
                 $oauthUser = $driver->userFromToken($request->access_token);
             }
-        } catch (\Exception $e) {
-           throw new AuthenticationException('参数错误，未获取用户信息');
+        } catch (Exception $e) {
+            throw new AuthenticationException('参数错误，未获取用户信息');
         }
 
         if (!$oauthUser->getId()) {

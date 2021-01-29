@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Reply;
+use App\Repositories\Models\Reply;
 
 return [
     'title'   => '回复',

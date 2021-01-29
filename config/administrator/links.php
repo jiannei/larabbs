@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Link;
+use App\Repositories\Models\Link;
 
 return [
     'title'   => '资源推荐',

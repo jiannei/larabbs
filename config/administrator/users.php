@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Repositories\Models\User;
 
 return [
     // 页面标题

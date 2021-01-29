@@ -2,7 +2,7 @@
 
 namespace Tests\Traits;
 
-use App\Models\User;
+use App\Repositories\Models\User;
 
 trait ActingJWTUser
 {

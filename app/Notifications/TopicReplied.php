@@ -2,13 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Channels\JPushChannel;
+use App\Repositories\Models\Reply;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Models\Reply;
+use Illuminate\Notifications\Notification;
 use JPush\PushPayload;
-use App\Notifications\Channels\JPushChannel;
 
 class TopicReplied extends Notification implements ShouldQueue
 {
@@ -51,8 +51,8 @@ class TopicReplied extends Notification implements ShouldQueue
         $url = $this->reply->topic->link(['#reply' . $this->reply->id]);
 
         return (new MailMessage)
-                    ->line('你的话题有新回复！')
-                    ->action('查看回复', $url);
+            ->line('你的话题有新回复！')
+            ->action('查看回复', $url);
     }
 
     public function toJPush($notifiable, PushPayload $payload): PushPayload

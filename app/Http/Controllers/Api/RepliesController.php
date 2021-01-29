@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Topic;
-use App\Models\Reply;
-use Illuminate\Http\Request;
 use App\Http\Queries\ReplyQuery;
-use App\Http\Resources\ReplyResource;
 use App\Http\Requests\Api\ReplyRequest;
+use App\Http\Resources\ReplyResource;
+use App\Repositories\Models\Reply;
+use App\Repositories\Models\Topic;
 
 class RepliesController extends Controller
 {

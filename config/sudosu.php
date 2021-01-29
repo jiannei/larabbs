@@ -6,5 +6,5 @@ return [
     'allowed_tlds' => ['dev', 'local', 'test'],
 
     // 用户模型
-    'user_model' => App\Models\User::class
+    'user_model' => App\Repositories\Models\User::class
 ];

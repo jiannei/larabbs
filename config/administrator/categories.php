@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Category;
+use App\Repositories\Models\Category;
 
 return [
     'title'   => '分类',

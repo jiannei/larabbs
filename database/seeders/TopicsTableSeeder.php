@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Repositories\Models\Topic;
 use Illuminate\Database\Seeder;
-use App\Models\Topic;
 
 class TopicsTableSeeder extends Seeder
 {

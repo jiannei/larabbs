@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\User;
+use App\Repositories\Models\User;
 
 class UserObserver
 {

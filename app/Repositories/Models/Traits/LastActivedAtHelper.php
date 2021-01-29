@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Repositories\Models\Traits;
 
-use Illuminate\Support\Facades\Redis;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redis;
 
 trait LastActivedAtHelper
 {

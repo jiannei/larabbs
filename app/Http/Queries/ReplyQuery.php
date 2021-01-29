@@ -2,9 +2,8 @@
 
 namespace App\Http\Queries;
 
-use App\Models\Reply;
+use App\Repositories\Models\Reply;
 use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
 
 class ReplyQuery extends QueryBuilder
 {

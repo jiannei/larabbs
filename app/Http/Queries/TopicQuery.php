@@ -2,9 +2,9 @@
 
 namespace App\Http\Queries;
 
-use App\Models\Topic;
-use Spatie\QueryBuilder\QueryBuilder;
+use App\Repositories\Models\Topic;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TopicQuery extends QueryBuilder
 {
@@ -13,7 +13,7 @@ class TopicQuery extends QueryBuilder
         parent::__construct(Topic::query());
 
         $this->allowedIncludes('user', 'user.roles', 'category')
-             ->allowedFilters([
+            ->allowedFilters([
                 'title',
                 AllowedFilter::exact('category_id'),
                 AllowedFilter::scope('withOrder')->default('recentReplied'),

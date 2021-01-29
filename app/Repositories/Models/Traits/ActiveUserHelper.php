@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Repositories\Models\Traits;
 
-use App\Models\Topic;
-use App\Models\Reply;
+use App\Repositories\Models\Reply;
+use App\Repositories\Models\Topic;
 use Carbon\Carbon;
-use Cache;
-use DB;
-use Arr;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 trait ActiveUserHelper
 {

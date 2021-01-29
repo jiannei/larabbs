@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Topic;
+use App\Repositories\Models\Topic;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TopicFactory extends Factory

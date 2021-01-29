@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Repositories\Models\Reply;
 use Illuminate\Database\Seeder;
-use App\Models\Reply;
 
 class RepliesTableSeeder extends Seeder
 {
