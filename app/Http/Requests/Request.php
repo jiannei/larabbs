@@ -4,11 +4,11 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Request extends FormRequest
+abstract class Request extends FormRequest
 {
     public function authorize()
     {
-    	// Using policy for Authorization
+        // Using policy for Authorization
         return true;
     }
 }

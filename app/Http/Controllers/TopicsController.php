@@ -5,26 +5,46 @@ namespace App\Http\Controllers;
 use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\TopicRequest;
 use App\Repositories\Models\Category;
-use App\Repositories\Models\Link;
 use App\Repositories\Models\Topic;
 use App\Repositories\Models\User;
+use App\Services\LinkService;
+use App\Services\TopicService;
+use App\Services\UserService;
 use Auth;
 use Illuminate\Http\Request;
 
 class TopicsController extends Controller
 {
-    public function __construct()
+    /**
+     * @var TopicService
+     */
+    private $topicService;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @var LinkService
+     */
+    private $linkService;
+
+    public function __construct(TopicService $topicService, UserService $userService, LinkService $linkService)
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+
+        $this->topicService = $topicService;
+        $this->userService = $userService;
+        $this->linkService = $linkService;
     }
 
-    public function index(Request $request, Topic $topic, User $user, Link $link)
+    public function index(Request $request, User $user)
     {
-        $topics = $topic->withOrder($request->order)
-            ->with('user', 'category')  // 预加载防止 N+1 问题
-            ->paginate(20);
+        $topics = $this->topicService->handleSearchList($request);
+        $links = $this->linkService->handleSearchAll();
+
         $active_users = $user->getActiveUsers();
-        $links = $link->getAllCached();
 
         return view('topics.index', compact('topics', 'active_users', 'links'));
     }
