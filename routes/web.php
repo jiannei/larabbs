@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', 'TopicsController@index')->name('root');
 
 // 用户身份验证相关的路由
