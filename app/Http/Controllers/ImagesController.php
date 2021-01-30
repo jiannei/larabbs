@@ -29,7 +29,7 @@ class ImagesController extends Controller
         ];
 
         if ($file = $request->upload_file) {
-            $result = $this->service->handleUpload($file, 'topics', Auth::id(), 1024);
+            $result = $this->service->upload($file, 'topics', Auth::id(), 1024);
 
             if ($result) {
                 $data['file_path'] = $result['path'];

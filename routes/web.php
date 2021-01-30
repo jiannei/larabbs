@@ -37,7 +37,9 @@ Route::get('email/verify', [VerificationController::class, 'show'])->name('verif
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::resource('users', UsersController::class, ['only' => ['show', 'update', 'edit']]);
+Route::match(['put', 'patch'], 'users/{id}', [UsersController::class, 'update'])->name('users.update');
+Route::get('users/{id}', [UsersController::class, 'show'])->name('users.show');
+Route::get('users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
 Route::get('/topics', [TopicsController::class, 'index'])->name('topics.index');
 Route::get('/topics/create', [TopicsController::class, 'create'])->name('topics.create');

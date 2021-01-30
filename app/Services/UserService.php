@@ -11,11 +11,15 @@ use App\Repositories\Eloquent\ReplyRepositoryEloquent;
 use App\Repositories\Eloquent\TopicRepositoryEloquent;
 use App\Repositories\Eloquent\UserRepositoryEloquent;
 use App\Repositories\Enums\CacheEnum;
+use App\Support\Traits\Services\UploadImage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 class UserService
 {
+    use UploadImage;
+
     /**
      * @var UserRepositoryEloquent
      */
@@ -34,6 +38,25 @@ class UserService
         $this->userRepository = $userRepository;
         $this->topicRepository = $topicRepository;
         $this->replyRepository = $replyRepository;
+    }
+
+    public function handleSearchItem($id)
+    {
+        return $this->userRepository->find($id);
+    }
+
+    public function handleUpdateItem(Request $request, $id)
+    {
+        $attributes = $request->all();
+
+        if ($request->avatar) {
+            $result = $this->upload($request->avatar, 'avatars', $id, 416);
+            if ($result) {
+                $attributes['avatar'] = $result['path'];
+            }
+        }
+
+        return $this->userRepository->update($attributes, $id);
     }
 
     public function handleActiveUsers($refresh = false)
