@@ -38,14 +38,17 @@ Route::post('email/resend', [VerificationController::class, 'resend'])->name('ve
 
 Route::resource('users', UsersController::class, ['only' => ['show', 'update', 'edit']]);
 
-Route::resource('topics', TopicsController::class, ['only' => ['index', 'create', 'store', 'update', 'edit', 'destroy']]);
+Route::get('/topics', [TopicsController::class, 'index'])->name('topics.index');
+Route::get('/topics/create', [TopicsController::class, 'create'])->name('topics.create');
+Route::post('/topics', [TopicsController::class, 'store'])->name('topics.store');
+Route::get('/topics/{id}/edit', [TopicsController::class, 'edit'])->name('topics.edit');
+Route::match(['put', 'patch'], '/topics/{id}', [TopicsController::class, 'update'])->name('topics.update');
+Route::delete('/topics/{id}', [TopicsController::class, 'destroy'])->name('topics.destroy');
+Route::get('topics/{topic}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');// 末尾
+
 Route::resource('categories', CategoriesController::class, ['only' => ['show']]);
+Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
+Route::resource('notifications', NotificationsController::class, ['only' => ['index']]);
 
 Route::post('upload_image', [TopicsController::class, 'uploadImage'])->name('topics.upload_image');
-
-Route::get('topics/{topic}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');
-
-Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
-
-Route::resource('notifications', NotificationsController::class, ['only' => ['index']]);
 Route::get('permission-denied', [PagesController::class, 'permissionDenied'])->name('permission-denied');

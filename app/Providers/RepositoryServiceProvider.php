@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repositories\CategoryRepository;
 use App\Contracts\Repositories\LinkRepository;
 use App\Contracts\Repositories\ReplyRepository;
 use App\Contracts\Repositories\TopicRepository;
 use App\Contracts\Repositories\UserRepository;
+use App\Repositories\Eloquent\CategoryRepositoryEloquent;
 use App\Repositories\Eloquent\LinkRepositoryEloquent;
 use App\Repositories\Eloquent\ReplyRepositoryEloquent;
 use App\Repositories\Eloquent\TopicRepositoryEloquent;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepository::class, UserRepositoryEloquent::class);
         $this->app->bind(LinkRepository::class, LinkRepositoryEloquent::class);
         $this->app->bind(ReplyRepository::class, ReplyRepositoryEloquent::class);
+        $this->app->bind(CategoryRepository::class, CategoryRepositoryEloquent::class);
         //:end-bindings:
     }
 }

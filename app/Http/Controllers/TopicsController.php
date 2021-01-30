@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\TopicRequest;
-use App\Repositories\Models\Category;
 use App\Repositories\Models\Topic;
+use App\Services\CategoryService;
 use App\Services\LinkService;
 use App\Services\TopicService;
 use App\Services\UserService;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TopicsController extends Controller
 {
@@ -29,13 +29,19 @@ class TopicsController extends Controller
      */
     private $linkService;
 
-    public function __construct(TopicService $topicService, UserService $userService, LinkService $linkService)
+    /**
+     * @var CategoryService
+     */
+    private $categoryService;
+
+    public function __construct(TopicService $topicService, UserService $userService, LinkService $linkService, CategoryService $categoryService)
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
 
         $this->topicService = $topicService;
         $this->userService = $userService;
         $this->linkService = $linkService;
+        $this->categoryService = $categoryService;
     }
 
     public function index(Request $request)
@@ -58,40 +64,49 @@ class TopicsController extends Controller
         return view('topics.show', compact('topic'));
     }
 
-    public function create(Topic $topic)
+    public function create()
     {
-        $categories = Category::all();
-        return view('topics.create_and_edit', compact('topic', 'categories'));
+        $categories = $this->categoryService->handleSearchAll();
+
+        return view('topics.create', compact('categories'));
     }
 
-    public function store(TopicRequest $request, Topic $topic)
+    public function store(TopicRequest $request)
     {
-        $topic->fill($request->all());
-        $topic->user_id = Auth::id();
-        $topic->save();
+        $topic = $this->topicService->handleCreateItem($request);
 
         return redirect()->to($topic->link())->with('success', '帖子创建成功！');
     }
 
-    public function edit(Topic $topic)
+    public function edit($id)
     {
+        $topic = $this->topicService->handleSearchItem($id);
+
         $this->authorize('update', $topic);
-        $categories = Category::all();
-        return view('topics.create_and_edit', compact('topic', 'categories'));
+
+        $categories = $this->categoryService->handleSearchAll();
+
+        return view('topics.edit', compact('topic', 'categories'));
     }
 
-    public function update(TopicRequest $request, Topic $topic)
+    public function update(TopicRequest $request, $id)
     {
-        $this->authorize('update', $topic);
-        $topic->update($request->all());
+        $topic = $this->topicService->handleSearchItem($id);
+
+        $this->authorize('update', $topic);// TODO
+
+        $topic = $this->topicService->handleUpdateItem($request, $id);
 
         return redirect()->to($topic->link())->with('success', '更新成功！');
     }
 
-    public function destroy(Topic $topic)
+    public function destroy($id)
     {
+        $topic = $this->topicService->handleSearchItem($id);
+
         $this->authorize('destroy', $topic);
-        $topic->delete();
+
+        $this->topicService->handleDeleteItem($id);
 
         return redirect()->route('topics.index')->with('success', '成功删除！');
     }

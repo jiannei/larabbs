@@ -12,6 +12,7 @@ class CacheEnum extends BaseCacheEnum
     // 表明+业务描述
     public const LINKS_SIDEBAR = 'linksSidebar';
     public const USERS_ACTIVE = 'usersActive';
+    public const CATEGORIES = 'categories';
 
     protected static function linksSidebar($options)
     {
@@ -21,5 +22,10 @@ class CacheEnum extends BaseCacheEnum
     protected static function usersActive($options)
     {
         return Carbon::now()->addHours();
+    }
+
+    protected static function categories($options)
+    {
+        return Carbon::now()->addDays();
     }
 }
