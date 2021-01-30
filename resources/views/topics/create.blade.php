@@ -64,7 +64,7 @@
       const editor = new Simditor({
         textarea: $('#editor'),
         upload: {
-          url: '{{ route('topics.upload_image') }}',
+          url: '{{ route('images.store') }}',
           params: {
             _token: '{{ csrf_token() }}'
           },

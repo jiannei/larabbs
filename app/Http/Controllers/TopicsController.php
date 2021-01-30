@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\TopicRequest;
-use App\Repositories\Models\Topic;
 use App\Services\CategoryService;
 use App\Services\LinkService;
 use App\Services\TopicService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class TopicsController extends Controller
 {
@@ -54,10 +51,12 @@ class TopicsController extends Controller
         return view('topics.index', compact('topics', 'active_users', 'links'));
     }
 
-    public function show(Request $request, Topic $topic)
+    public function show($id, $slug)
     {
+        $topic = $this->topicService->handleSearchItem($id);
+
         // URL 矫正
-        if (!empty($topic->slug) && $topic->slug != $request->slug) {
+        if (!empty($topic->slug) && $topic->slug != $slug) {
             return redirect($topic->link(), 301);
         }
 
@@ -109,27 +108,5 @@ class TopicsController extends Controller
         $this->topicService->handleDeleteItem($id);
 
         return redirect()->route('topics.index')->with('success', '成功删除！');
-    }
-
-    public function uploadImage(Request $request, ImageUploadHandler $uploader)
-    {
-        // 初始化返回数据，默认是失败的
-        $data = [
-            'success' => false,
-            'msg' => '上传失败!',
-            'file_path' => ''
-        ];
-        // 判断是否有上传文件，并赋值给 $file
-        if ($file = $request->upload_file) {
-            // 保存图片到本地
-            $result = $uploader->save($file, 'topics', Auth::id(), 1024);
-            // 图片保存成功的话
-            if ($result) {
-                $data['file_path'] = $result['path'];
-                $data['msg'] = "上传成功!";
-                $data['success'] = true;
-            }
-        }
-        return $data;
     }
 }

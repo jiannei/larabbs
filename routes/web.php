@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\RepliesController;
@@ -44,11 +45,12 @@ Route::post('/topics', [TopicsController::class, 'store'])->name('topics.store')
 Route::get('/topics/{id}/edit', [TopicsController::class, 'edit'])->name('topics.edit');
 Route::match(['put', 'patch'], '/topics/{id}', [TopicsController::class, 'update'])->name('topics.update');
 Route::delete('/topics/{id}', [TopicsController::class, 'destroy'])->name('topics.destroy');
-Route::get('topics/{topic}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');// 末尾
+Route::get('topics/{id}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');// 末尾
+
+Route::post('images', [ImagesController::class, 'store'])->name('images.store');
 
 Route::resource('categories', CategoriesController::class, ['only' => ['show']]);
 Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
 Route::resource('notifications', NotificationsController::class, ['only' => ['index']]);
 
-Route::post('upload_image', [TopicsController::class, 'uploadImage'])->name('topics.upload_image');
 Route::get('permission-denied', [PagesController::class, 'permissionDenied'])->name('permission-denied');
