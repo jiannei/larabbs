@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\RepliesController;
@@ -13,7 +14,7 @@ use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [TopicsController::class, 'index'])->name('root');
+Route::get('/', [HomeController::class, 'home'])->name('root');
 
 // 用户身份验证相关的路由
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
