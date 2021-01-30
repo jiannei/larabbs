@@ -2,19 +2,19 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Contracts\Repositories\TopicRepository;
+use App\Contracts\Repositories\ReplyRepository;
 use App\Repositories\Criteria\RequestCriteria;
-use App\Repositories\Models\Topic;
-use App\Repositories\Validators\TopicValidator;
+use App\Repositories\Models\Reply;
+use App\Repositories\Validators\ReplyValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Class TopicRepositoryEloquent.
+ * Class ReplyRepositoryEloquent.
  *
  * @package namespace App\Repositories\Eloquent;
  */
-class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
+class ReplyRepositoryEloquent extends BaseRepository implements ReplyRepository
 {
     /**
      * Specify Model class name
@@ -23,9 +23,8 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
      */
     public function model()
     {
-        return Topic::class;
+        return Reply::class;
     }
-
 
     /**
      * Boot up the repository, pushing criteria
@@ -33,15 +32,15 @@ class TopicRepositoryEloquent extends BaseRepository implements TopicRepository
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
-        // $this->pushCriteria(app(TopicCriteria::class));
     }
 
-    // 查询限定时间范围（$pass_days）内，有发表过话题的用户
+    // 查询过去指定时间有发表过回复的用户
     public function queryPastUsers($passDays)
     {
-        return $this->model::query()->select(DB::raw('user_id, count(*) as topic_count'))
+        return $this->model::query()->select(DB::raw('user_id, count(*) as reply_count'))
             ->where('created_at', '>=', Carbon::now()->subDays($passDays))
             ->groupBy('user_id')
             ->get();
     }
+
 }

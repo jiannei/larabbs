@@ -44,7 +44,8 @@ class TopicsController extends Controller
         $topics = $this->topicService->handleSearchList($request);
         $links = $this->linkService->handleSearchAll();
 
-        $active_users = $user->getActiveUsers();
+        $active_users = $this->userService->handleActiveUsers($request);
+        //$active_users = $user->getActiveUsers();
 
         return view('topics.index', compact('topics', 'active_users', 'links'));
     }
