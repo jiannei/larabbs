@@ -6,7 +6,6 @@ use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\TopicRequest;
 use App\Repositories\Models\Category;
 use App\Repositories\Models\Topic;
-use App\Repositories\Models\User;
 use App\Services\LinkService;
 use App\Services\TopicService;
 use App\Services\UserService;
@@ -39,13 +38,12 @@ class TopicsController extends Controller
         $this->linkService = $linkService;
     }
 
-    public function index(Request $request, User $user)
+    public function index(Request $request)
     {
         $topics = $this->topicService->handleSearchList($request);
         $links = $this->linkService->handleSearchAll();
 
-        $active_users = $this->userService->handleActiveUsers($request);
-        //$active_users = $user->getActiveUsers();
+        $active_users = $this->userService->handleActiveUsers();
 
         return view('topics.index', compact('topics', 'active_users', 'links'));
     }

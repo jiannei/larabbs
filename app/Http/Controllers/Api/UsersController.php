@@ -6,18 +6,29 @@ use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\Models\Image;
 use App\Repositories\Models\User;
+use App\Services\UserService;
 use Cache;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function store(UserRequest $request)
     {
         $verifyData = Cache::get($request->verification_key);
 
         if (!$verifyData) {
-		   abort(403, '验证码已失效');
+            abort(403, '验证码已失效');
         }
 
         if (!hash_equals($verifyData['code'], $request->verification_code)) {
@@ -64,9 +75,10 @@ class UsersController extends Controller
         return (new UserResource($user))->showSensitiveFields();
     }
 
-    public function activedIndex(User $user)
+    public function activedIndex()
     {
         UserResource::wrap('data');
-        return UserResource::collection($user->getActiveUsers());
+
+        return UserResource::collection($this->userService->handleActiveUsers());
     }
 }

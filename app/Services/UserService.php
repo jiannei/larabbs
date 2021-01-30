@@ -10,8 +10,9 @@ use App\Contracts\Repositories\UserRepository;
 use App\Repositories\Eloquent\ReplyRepositoryEloquent;
 use App\Repositories\Eloquent\TopicRepositoryEloquent;
 use App\Repositories\Eloquent\UserRepositoryEloquent;
-use Illuminate\Http\Request;
+use App\Repositories\Enums\CacheEnum;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 class UserService
 {
@@ -35,15 +36,24 @@ class UserService
         $this->replyRepository = $replyRepository;
     }
 
-    public function handleActiveUsers(Request $request)
+    public function handleActiveUsers($refresh = false)
     {
-        return $this->calculateActiveUsers();
+        $cacheKey = CacheEnum::getCacheKey(CacheEnum::USERS_ACTIVE);
+        $cacheExpireTime = CacheEnum::getCacheExpireTime(CacheEnum::USERS_ACTIVE);
+
+        if ($refresh) {
+            Cache::forget($cacheKey);
+        }
+
+        return Cache::remember($cacheKey, $cacheExpireTime, function () {
+            return $this->calculateActiveUsers();
+        });
     }
 
-    protected function calculateActiveUsers()
+    public function calculateActiveUsers()
     {
         $topicWeight = 4;// 话题权重 TODO 算法
-        $replyWeight = 4;// 回复权重
+        $replyWeight = 1;// 回复权重
         $passDays = 7;
         $userNumber = 6; // 取出来多少用户
 
@@ -52,9 +62,8 @@ class UserService
         // 根据话题数量计算得分
         $topicScores = [];
         $topicUsers->each(function ($item) use (&$topicScores, $topicWeight) {
-            $topicScores[] = [
+            $topicScores[$item->user_id] = [
                 'score' => $item->topic_count * $topicWeight,// TODO
-                'user_id' => $item->user_id,
             ];
         });
 
@@ -63,22 +72,19 @@ class UserService
         // 根据回复数量计算得分
         $replyScores = [];
         $replyUsers->each(function ($item) use (&$replyScores, $replyWeight) {
-            $replyScores[] = [
+            $replyScores[$item->user_id] = [
                 'score' => $item->reply_count * $replyWeight,// TODO
-                'user_id' => $item->user_id,
             ];
         });
 
+        $userIds = array_unique(array_merge(array_keys($topicScores), array_keys($replyScores)));
         // 汇总得分
         $scores = [];
-        foreach ($topicScores as $topic) {
-            $scores[$topic['user_id']]['score'] = $topic['score'];
-            foreach ($replyScores as $reply) {
-                if (isset($scores[$reply['user_id']])) {
-                    $scores[$reply['user_id']]['score'] += $reply['score'];
-                } else {
-                    $scores[$reply['user_id']]['score'] = $reply['score'];
-                }
+        foreach ($userIds as $userId) {
+            $scores[$userId]['score'] = $topicScores[$userId]['score'] ?? 0;
+
+            if (isset($replyScores[$userId])) {
+                $scores[$userId]['score'] += $replyScores[$userId]['score'];
             }
         }
 
@@ -87,28 +93,18 @@ class UserService
             return $user['score'];
         });
 
-        // 我们需要的是倒序，高分靠前，第二个参数为保持数组的 KEY 不变
         $scores = array_reverse($scores, true);
-
-        // 只获取我们想要的数量
         $scores = array_slice($scores, 0, $userNumber, true);
 
-        // 新建一个空集合y
-        $active_users = collect();
-
+        $activeUsers = collect();
         foreach ($scores as $user_id => $user) {
-            // 找寻下是否可以找到用户
             $user = $this->userRepository->find($user_id);
-
-            // 如果数据库里有该用户的话
             if ($user) {
-
-                // 将此用户实体放入集合的末尾
-                $active_users->push($user);
+                $activeUsers->push($user);
             }
         }
 
-        // 返回数据
-        return $active_users;
+        return $activeUsers;
     }
+
 }

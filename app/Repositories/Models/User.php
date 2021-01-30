@@ -15,7 +15,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
 {
-    use Traits\ActiveUserHelper;
     use Traits\LastActivedAtHelper;
     use HasRoles;
     use HasFactory, MustVerifyEmailTrait;
