@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Jobs\TranslateSlug;
 use App\Repositories\Models\Topic;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 // creating, created, updating, updated, saving,
 // saved,  deleting, deleted, restoring, restored

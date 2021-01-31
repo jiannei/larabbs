@@ -2,13 +2,11 @@
 
 namespace App\Notifications;
 
-use App\Notifications\Channels\JPushChannel;
 use App\Repositories\Models\Reply;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use JPush\PushPayload;
 
 class TopicReplied extends Notification implements ShouldQueue
 {
@@ -25,13 +23,13 @@ class TopicReplied extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         // 开启通知的频道
-        return ['database', 'mail', JPushChannel::class];
+        return ['database', 'mail'];
     }
 
     public function toDatabase($notifiable)
     {
         $topic = $this->reply->topic;
-        $link =  $topic->link(['#reply' . $this->reply->id]);
+        $link = $topic->link(['#reply'.$this->reply->id]);
 
         // 存入数据库里的数据
         return [
@@ -48,18 +46,10 @@ class TopicReplied extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $url = $this->reply->topic->link(['#reply' . $this->reply->id]);
+        $url = $this->reply->topic->link(['#reply'.$this->reply->id]);
 
         return (new MailMessage)
             ->line('你的话题有新回复！')
             ->action('查看回复', $url);
-    }
-
-    public function toJPush($notifiable, PushPayload $payload): PushPayload
-    {
-        return $payload
-            ->setPlatform('all')
-            ->addRegistrationId($notifiable->registration_id)
-            ->setNotificationAlert(strip_tags($this->reply->content));
     }
 }

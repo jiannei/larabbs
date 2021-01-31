@@ -10,7 +10,6 @@ use App\Repositories\Models\Link;
 use App\Repositories\Models\Reply;
 use App\Repositories\Models\Topic;
 use App\Repositories\Models\User;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,7 +42,5 @@ class AppServiceProvider extends ServiceProvider
         Link::observe(LinkObserver::class);
 
         Paginator::useBootstrap();
-
-        JsonResource::withoutWrapping();
     }
 }

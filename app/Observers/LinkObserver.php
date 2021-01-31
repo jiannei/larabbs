@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Repositories\Models\Link;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 
 class LinkObserver
 {

@@ -2,14 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Handlers\SlugTranslateHandler;
 use App\Repositories\Models\Topic;
-use DB;
+use App\Services\TranslateService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class TranslateSlug implements ShouldQueue
 {
@@ -23,10 +23,10 @@ class TranslateSlug implements ShouldQueue
         $this->topic = $topic;
     }
 
-    public function handle()
+    public function handle(TranslateService $translateService)
     {
         // 请求百度 API 接口进行翻译
-        $slug = app(SlugTranslateHandler::class)->translate($this->topic->title);
+        $slug = $translateService->translate($this->topic->title);
 
         // 为了避免模型监控器死循环调用，我们使用 DB 类直接对数据库进行操作
         DB::table('topics')->where('id', $this->topic->id)->update(['slug' => $slug]);
