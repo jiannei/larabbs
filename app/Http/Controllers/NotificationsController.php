@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use Auth;
 
 class NotificationsController extends Controller
 {
-    public function __construct()
+    /**
+     * @var NotificationService
+     */
+    private $service;
+
+    public function __construct(NotificationService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // 获取登录用户的所有通知
-        $notifications = Auth::user()->notifications()->paginate(20);
-        // 标记为已读，未读数量清零
-        Auth::user()->markAsRead();
+        $notifications = $this->service->handleSearchList($request);
+
+        $this->service->markAsRead($request);
+
         return view('notifications.index', compact('notifications'));
     }
 }

@@ -9,8 +9,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
-use Str;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
@@ -22,6 +22,29 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
     use Notifiable {
         notify as protected laravelNotify;
     }
+
+    protected $fillable = [
+        'name',
+        'phone',
+        'email',
+        'password',
+        'introduction',
+        'avatar',
+        'weixin_openid',
+        'weixin_unionid',
+        'registration_id'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'weixin_openid',
+        'weixin_unionid'
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     /**
      * 兼容 Laravel 8 的 Factory.
@@ -47,29 +70,6 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
 
         $this->laravelNotify($instance);
     }
-
-    protected $fillable = [
-        'name',
-        'phone',
-        'email',
-        'password',
-        'introduction',
-        'avatar',
-        'weixin_openid',
-        'weixin_unionid',
-        'registration_id'
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'weixin_openid',
-        'weixin_unionid'
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
 
     public function topics()
     {
