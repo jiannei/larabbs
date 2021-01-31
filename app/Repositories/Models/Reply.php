@@ -9,7 +9,9 @@ class Reply extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content'];
+    protected $fillable = [
+        'content', 'user_id', 'topic_id'
+    ];
 
     /**
      * 兼容 Laravel 8 的 Factory.

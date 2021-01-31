@@ -3,30 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReplyRequest;
-use App\Repositories\Models\Reply;
-use Auth;
+use App\Services\ReplyService;
 
 class RepliesController extends Controller
 {
-    public function __construct()
+    /**
+     * @var ReplyService
+     */
+    private $service;
+
+    public function __construct(ReplyService $service)
     {
         $this->middleware('auth');
+
+        $this->service = $service;
     }
 
-    public function store(ReplyRequest $request, Reply $reply)
+    public function store(ReplyRequest $request)
     {
-        $reply->content = $request->content;
-        $reply->user_id = Auth::id();
-        $reply->topic_id = $request->topic_id;
-        $reply->save();
+        $reply = $this->service->handleCreateItem($request);
 
         return redirect()->to($reply->topic->link())->with('success', '评论创建成功！');
     }
 
-    public function destroy(Reply $reply)
+    public function destroy($id)
     {
+        $reply = $this->service->handleSearchItem($id);
+
         $this->authorize('destroy', $reply);
-        $reply->delete();
+
+        $this->service->handleDeleteItem($id);
 
         return redirect()->to($reply->topic->link())->with('success', '评论删除成功！');
     }

@@ -51,7 +51,10 @@ Route::get('categories/{id}/topics', [TopicsController::class, 'category'])->nam
 
 Route::post('images', [ImagesController::class, 'store'])->name('images.store');
 
-Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
+Route::post('replies', [RepliesController::class, 'store'])->name('replies.store');
+Route::delete('replies/{id}', [RepliesController::class, 'destroy'])->name('replies.destroy');
+
+//Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
 Route::resource('notifications', NotificationsController::class, ['only' => ['index']]);
 
 Route::get('permission-denied', [PagesController::class, 'permissionDenied'])->name('permission-denied');
