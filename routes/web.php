@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PagesController;
@@ -14,7 +13,8 @@ use App\Http\Controllers\TopicsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'home'])->name('root');
+Route::get('/', [PagesController::class, 'home'])->name('home');
+Route::get('permission-denied', [PagesController::class, 'permissionDenied'])->name('permission-denied');
 
 // 用户身份验证相关的路由
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -40,14 +40,15 @@ Route::match(['put', 'patch'], 'users/{id}', [UsersController::class, 'update'])
 Route::get('users/{id}', [UsersController::class, 'show'])->name('users.show');
 Route::get('users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
-Route::get('/topics', [TopicsController::class, 'index'])->name('topics.index');
+Route::get('/topics', [PagesController::class, 'home'])->name('topics.index');
 Route::get('/topics/create', [TopicsController::class, 'create'])->name('topics.create');
 Route::post('/topics', [TopicsController::class, 'store'])->name('topics.store');
 Route::get('/topics/{id}/edit', [TopicsController::class, 'edit'])->name('topics.edit');
 Route::match(['put', 'patch'], '/topics/{id}', [TopicsController::class, 'update'])->name('topics.update');
 Route::delete('/topics/{id}', [TopicsController::class, 'destroy'])->name('topics.destroy');
 Route::get('topics/{id}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');// 末尾
-Route::get('categories/{id}/topics', [TopicsController::class, 'category'])->name('categories.topics.index');
+
+Route::get('categories/{id}', [TopicsController::class, 'category'])->name('categories.topics.index');
 
 Route::post('images', [ImagesController::class, 'store'])->name('images.store');
 
@@ -55,5 +56,3 @@ Route::post('replies', [RepliesController::class, 'store'])->name('replies.store
 Route::delete('replies/{id}', [RepliesController::class, 'destroy'])->name('replies.destroy');
 
 Route::get('notifications', [NotificationsController::class, 'index'])->name('notifications.index');
-
-Route::get('permission-denied', [PagesController::class, 'permissionDenied'])->name('permission-denied');

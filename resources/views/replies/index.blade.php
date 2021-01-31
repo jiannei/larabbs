@@ -19,8 +19,8 @@
           @can('destroy', $reply)
             <span class="meta float-right">
               <form action="{{ route('replies.destroy', $reply->id) }}"
-                  onsubmit="return confirm('确定要删除此评论？');"
-                  method="post">
+                    onsubmit="return confirm('确定要删除此评论？');"
+                    method="post">
                 {{ csrf_field() }}
                 {{ method_field('DELETE') }}
                 <button type="submit" class="btn btn-default btn-xs pull-left text-secondary">

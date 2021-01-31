@@ -1,47 +1,51 @@
-@extends('layouts.app')
-
-@section('title', isset($category) ? $category->name : '话题列表')
-
-@section('content')
-
-<div class="row mb-5">
-  <div class="col-lg-9 col-md-9 topic-list">
-    @if (isset($category))
-      <div class="alert alert-info" role="alert">
-        {{ $category->name }} ：{{ $category->description }}
-      </div>
-    @endif
-
-    <div class="card ">
-      <div class="card-header bg-transparent">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <a class="nav-link {{ active_class( ! if_query('order', 'recent')) }}" href="{{ Request::url() }}?order=default">
-              最后回复
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {{ active_class(if_query('order', 'recent')) }}" href="{{ Request::url() }}?order=recent">
-              最新发布
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="card-body">
-        {{-- 话题列表 --}}
-        @include('topics._topic_list', ['topics' => $topics])
-        {{-- 分页 --}}
-        <div class="mt-5">
-          {!! $topics->appends(Request::except('page'))->render() !!}
+@if (count($topics))
+  <ul class="list-unstyled">
+    @foreach ($topics as $topic)
+      <li class="media">
+        <div class="media-left">
+          <a href="{{ route('users.show', [$topic->user_id]) }}">
+            <img class="media-object img-thumbnail mr-3" style="width: 52px; height: 52px;" src="{{ $topic->user->avatar }}" title="{{ $topic->user->name }}">
+          </a>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="col-lg-3 col-md-3 sidebar">
-    @include('topics._sidebar')
-  </div>
-</div>
+        <div class="media-body">
 
-@endsection
+          <div class="media-heading mt-0 mb-1">
+            <a href="{{ $topic->link() }}" title="{{ $topic->title }}">
+              {{ $topic->title }}
+            </a>
+            <a class="float-right" href="{{ $topic->link() }}">
+              <span class="badge badge-secondary badge-pill"> {{ $topic->reply_count }} </span>
+            </a>
+          </div>
+
+          <small class="media-body meta text-secondary">
+
+            <a class="text-secondary" href="{{ route('categories.topics.index', $topic->category_id) }}" title="{{ $topic->category->name }}">
+              <i class="far fa-folder"></i>
+              {{ $topic->category->name }}
+            </a>
+
+            <span> • </span>
+            <a class="text-secondary" href="{{ route('users.show', [$topic->user_id]) }}" title="{{ $topic->user->name }}">
+              <i class="far fa-user"></i>
+              {{ $topic->user->name }}
+            </a>
+            <span> • </span>
+            <i class="far fa-clock"></i>
+            <span class="timeago" title="最后活跃于：{{ $topic->updated_at }}">{{ $topic->updated_at->diffForHumans() }}</span>
+          </small>
+
+        </div>
+      </li>
+
+      @if ( ! $loop->last)
+        <hr>
+      @endif
+
+    @endforeach
+  </ul>
+
+@else
+  <div class="empty-block">暂无数据 ~_~</div>
+@endif

@@ -49,7 +49,7 @@ class TopicsController extends Controller
 
         $active_users = $this->userService->handleActiveUsers();
 
-        return view('topics.index', compact('topics', 'active_users', 'links'));
+        return view('pages.home', compact('topics', 'active_users', 'links'));
     }
 
     // 分类下的话题
@@ -62,10 +62,10 @@ class TopicsController extends Controller
 
         $active_users = $this->userService->handleActiveUsers();
 
-        return view('topics.index', compact('topics', 'active_users', 'links'));
+        return view('pages.home', compact('topics', 'active_users', 'links'));
     }
 
-    public function show($id, $slug)
+    public function show($id, $slug = null)
     {
         $topic = $this->topicService->handleSearchItem($id);
 
@@ -121,6 +121,6 @@ class TopicsController extends Controller
 
         $this->topicService->handleDeleteItem($id);
 
-        return redirect()->route('topics.index')->with('success', '成功删除！');
+        return redirect()->route('home')->with('success', '成功删除！');
     }
 }
