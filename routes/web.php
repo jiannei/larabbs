@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\NotificationsController;
@@ -48,10 +47,10 @@ Route::get('/topics/{id}/edit', [TopicsController::class, 'edit'])->name('topics
 Route::match(['put', 'patch'], '/topics/{id}', [TopicsController::class, 'update'])->name('topics.update');
 Route::delete('/topics/{id}', [TopicsController::class, 'destroy'])->name('topics.destroy');
 Route::get('topics/{id}/{slug?}', [TopicsController::class, 'show'])->name('topics.show');// 末尾
+Route::get('categories/{id}/topics', [TopicsController::class, 'category'])->name('categories.topics.index');
 
 Route::post('images', [ImagesController::class, 'store'])->name('images.store');
 
-Route::resource('categories', CategoriesController::class, ['only' => ['show']]);
 Route::resource('replies', RepliesController::class, ['only' => ['store', 'destroy']]);
 Route::resource('notifications', NotificationsController::class, ['only' => ['index']]);
 

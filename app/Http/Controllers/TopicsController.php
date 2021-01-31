@@ -33,7 +33,7 @@ class TopicsController extends Controller
 
     public function __construct(TopicService $topicService, UserService $userService, LinkService $linkService, CategoryService $categoryService)
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth', ['except' => ['index', 'category', 'show']]);
 
         $this->topicService = $topicService;
         $this->userService = $userService;
@@ -41,8 +41,22 @@ class TopicsController extends Controller
         $this->categoryService = $categoryService;
     }
 
+    // 默认首页话题
     public function index(Request $request)
     {
+        $topics = $this->topicService->handleSearchList($request);
+        $links = $this->linkService->handleSearchAll();
+
+        $active_users = $this->userService->handleActiveUsers();
+
+        return view('topics.index', compact('topics', 'active_users', 'links'));
+    }
+
+    // 分类下的话题
+    public function category(Request $request, $categoryId)
+    {
+        $request->offsetSet('category_id', $categoryId);
+
         $topics = $this->topicService->handleSearchList($request);
         $links = $this->linkService->handleSearchAll();
 
