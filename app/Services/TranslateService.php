@@ -4,7 +4,8 @@
 namespace App\Services;
 
 
-use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Overtrue\Pinyin\Pinyin;
 
@@ -12,9 +13,6 @@ class TranslateService
 {
     public function translate($text)
     {
-        // 实例化 HTTP 客户端
-        $http = new Client;
-
         // 初始化配置信息
         $api = 'http://api.fanyi.baidu.com/api/trans/vip/translate?';
         $appid = config('services.baidu_translate.appid');
@@ -32,7 +30,7 @@ class TranslateService
         $sign = md5($appid.$text.$salt.$key);
 
         // 构建请求参数
-        $query = http_build_query([
+        $query = Arr::query([
             "q" => $text,
             "from" => "zh",
             "to" => "en",
@@ -42,9 +40,9 @@ class TranslateService
         ]);
 
         // 发送 HTTP Get 请求
-        $response = $http->get($api.$query);
+        $response = Http::get($api.$query)->throw();
 
-        $result = json_decode($response->getBody(), true);
+        $result = $response->json();
 
         /**
          * 获取结果，如果请求成功，dd($result) 结果如下：
@@ -64,10 +62,10 @@ class TranslateService
         // 尝试获取获取翻译结果
         if (isset($result['trans_result'][0]['dst'])) {
             return Str::slug($result['trans_result'][0]['dst']);
-        } else {
-            // 如果百度翻译没有结果，使用拼音作为后备计划。
-            return $this->pinyin($text);
         }
+
+        // 如果百度翻译没有结果，使用拼音作为后备计划。
+        return $this->pinyin($text);
     }
 
     public function pinyin($text)
