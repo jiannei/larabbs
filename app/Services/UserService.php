@@ -105,7 +105,7 @@ class UserService
         // 遍历，并同步到数据库中
         foreach ($hashData as $field => $actived_at) {
             // 会将 `user_1` 转换为 1
-            $user_id = last(RedisEnum::parseField($field));
+            $user_id = last(RedisEnum::parseHashField($field));
 
             if ($user = $this->userRepository->find($user_id)) {
                 $user->last_active_at = $actived_at;

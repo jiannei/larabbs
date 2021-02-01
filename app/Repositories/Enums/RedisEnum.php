@@ -40,7 +40,7 @@ class RedisEnum extends Enum
         return is_null($identifier) ? $field : $field.':'.$identifier;
     }
 
-    public static function parseField($field)
+    public static function parseHashField($field)
     {
         return explode(':', $field);
     }
