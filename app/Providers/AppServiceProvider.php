@@ -36,11 +36,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerObservers();// 注册观察者
+
+        Paginator::useBootstrap();
+    }
+
+    protected function registerObservers(): void
+    {
         User::observe(UserObserver::class);
         Reply::observe(ReplyObserver::class);
         Topic::observe(TopicObserver::class);
         Link::observe(LinkObserver::class);
-
-        Paginator::useBootstrap();
     }
 }

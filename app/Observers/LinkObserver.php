@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
+use App\Repositories\Enums\CacheEnum;
 use App\Repositories\Models\Link;
 use Illuminate\Support\Facades\Cache;
 
 class LinkObserver
 {
-    // 在保存时清空 cache_key 对应的缓存
     public function saved(Link $link)
     {
-        Cache::forget($link->cache_key);
+        Cache::forget(CacheEnum::getCacheKey(CacheEnum::LINKS_SIDEBAR));
     }
 }
