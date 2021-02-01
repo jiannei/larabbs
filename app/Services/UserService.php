@@ -136,7 +136,7 @@ class UserService
 
     public function handleRecordActiveTime(User $user): bool
     {
-        // 获取今日 Redis 哈希表名称，如：larabbs_last_actived_at_2017-10-21
+        // 获取今日 Redis 哈希表名称，如：larabbs_last_active_at_2017-10-21
         $hashTable = RedisEnum::getHashTable(RedisEnum::LAST_ACTIVATED_AT, Carbon::today()->toDateString());
 
         // 字段名称，如：user_1
@@ -153,7 +153,7 @@ class UserService
 
     public function handleSyncActiveTime(): void
     {
-        // 获取昨日的哈希表名称，如：larabbs_last_actived_at_2017-10-21
+        // 获取昨日的哈希表名称，如：larabbs_last_active_at_2017-10-21
         $hashTable = RedisEnum::getHashTable(RedisEnum::LAST_ACTIVATED_AT, Carbon::today()->toDateString());
 
         // 从 Redis 中获取所有哈希表里的数据
@@ -165,7 +165,7 @@ class UserService
             $user_id = last(RedisEnum::parseField($field));
 
             if ($user = $this->userRepository->find($user_id)) {
-                $user->last_actived_at = $actived_at;
+                $user->last_active_at = $actived_at;
                 $user->save();
             }
         }
