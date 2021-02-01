@@ -41,17 +41,6 @@ class TopicsController extends Controller
         $this->categoryService = $categoryService;
     }
 
-    // 默认首页话题
-    public function index(Request $request)
-    {
-        $topics = $this->topicService->handleSearchList($request);
-        $links = $this->linkService->handleSearchAll();
-
-        $active_users = $this->userService->handleActiveUsers();
-
-        return view('pages.home', compact('topics', 'active_users', 'links'));
-    }
-
     // 分类下的话题
     public function category(Request $request, $categoryId)
     {

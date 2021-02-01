@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Support\Traits\Services;
+namespace App\Services\Concerns;
 
 
 use Illuminate\Support\Str;
