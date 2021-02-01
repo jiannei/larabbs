@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Repositories\Models\User;
+use App\Services\UserService;
 use Illuminate\Console\Command;
 
 class SyncUserActivedAt extends Command
@@ -10,9 +10,9 @@ class SyncUserActivedAt extends Command
     protected $signature = 'larabbs:sync-user-actived-at';
     protected $description = '将用户最后登录时间从 Redis 同步到数据库中';
 
-    public function handle(User $user)
+    public function handle(UserService $service)
     {
-        $user->syncUserActivedAt();
+        $service->handleSyncActiveTime();
         $this->info("同步成功！");
     }
 }

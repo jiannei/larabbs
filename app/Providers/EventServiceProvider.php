@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Listeners\EmailVerified;
+use App\Listeners\RequestArrived;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Jiannei\Logger\Laravel\Events\RequestArrivedEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,9 +21,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        \Illuminate\Auth\Events\Verified::class => [
-            \App\Listeners\EmailVerified::class,
+        Verified::class => [
+            EmailVerified::class,
         ],
+        RequestArrivedEvent::class => [
+            RequestArrived::class
+        ]
     ];
 
     /**

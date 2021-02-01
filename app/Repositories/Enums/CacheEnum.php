@@ -9,7 +9,7 @@ use Jiannei\Enum\Laravel\Repositories\Enums\CacheEnum as BaseCacheEnum;
 
 class CacheEnum extends BaseCacheEnum
 {
-    // 表明+业务描述
+    // 表名称+业务描述
     public const LINKS_SIDEBAR = 'linksSidebar';
     public const USERS_ACTIVE = 'usersActive';
     public const CATEGORIES = 'categories';

@@ -5,7 +5,6 @@ namespace App\Http;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
-use App\Http\Middleware\RecordLastActivedTime;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -25,6 +24,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jiannei\Logger\Laravel\Http\Middleware\RequestLog;
 
 class Kernel extends HttpKernel
 {
@@ -75,15 +75,16 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
 
             // 强制用户邮箱认证
-            \App\Http\Middleware\EnsureEmailIsVerified::class,
-
-            // 记录用户最后活跃时间
-            RecordLastActivedTime::class,
+            Middleware\EnsureEmailIsVerified::class,
         ],
 
         'api' => [
             'throttle:api',
             SubstituteBindings::class,
+        ],
+
+        'custom' => [
+            RequestLog::class,
         ],
     ];
 

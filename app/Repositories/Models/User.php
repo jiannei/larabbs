@@ -2,20 +2,22 @@
 
 namespace App\Repositories\Models;
 
+use App\Repositories\Enums\RedisEnum;
 use Auth;
+use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmailContract, JWTSubject
 {
-    use Traits\LastActivedAtHelper;
     use HasRoles;
     use HasFactory, MustVerifyEmailTrait;
 
@@ -115,6 +117,26 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         }
 
         $this->attributes['avatar'] = $path;
+    }
+
+    public function getLastActivedAtAttribute($value)
+    {
+        // 获取今日对应的哈希表名称
+        $hashTable = RedisEnum::getHashTable(RedisEnum::LAST_ACTIVATED_AT, Carbon::now()->toDateString());
+
+        // 字段名称，如：user_1
+        $hashField = RedisEnum::getHashField(RedisEnum::LAST_ACTIVATED_AT, $this->getAttribute('id'));
+
+        // 三元运算符，优先选择 Redis 的数据，否则使用数据库中
+        $datetime = Redis::hGet($hashTable, $hashField) ?: $value;
+
+        // 如果存在的话，返回时间对应的 Carbon 实体
+        if ($datetime) {
+            return new Carbon($datetime);
+        } else {
+            // 否则使用用户注册时间
+            return $this->created_at;
+        }
     }
 
     public function getJWTIdentifier()
